@@ -39,7 +39,10 @@ app.use((req, res, next) => {
 app.use("/api/hero-slides", heroRoutes);
 app.use("/api/blogs", blogRoutes);
 
-app.get("/", (req, res) => res.send("API running"));
+app.get("/api", (req, res) => {
+  res.send("API running ✅");
+});
+
 
 // ✅ Sitemap XML (published blogs only)
 app.get("/sitemap.xml", async (req, res) => {
