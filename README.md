@@ -26,10 +26,10 @@ The application enables admin users to manage hero content and blog posts withou
 # 🌍 Live Deployment
 
 ### 🔵 Frontend (Vercel)
-https://o8m-giakaa-clone-c484.vercel.app
+https://o8m-giakaa-clone-c484.vercel.app/
 
 ### 🟢 Backend (Render)
-https://o8m-giakaa-clone.onrender.com
+https://o8m-giakaa-clone.onrender.com/api
 
 ### 🗺 Sitemap
 https://o8m-giakaa-clone.onrender.com/sitemap.xml
