@@ -12,7 +12,7 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 
-// ✅ CORS via env (supports multiple origins)
+
 const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5173")
   .split(",")
   .map((s) => s.trim())
@@ -44,7 +44,7 @@ app.get("/api", (req, res) => {
 });
 
 
-// ✅ Sitemap XML (published blogs only)
+
 app.get("/sitemap.xml", async (req, res) => {
   try {
     const siteUrl = process.env.SITE_URL || "http://localhost:5173";

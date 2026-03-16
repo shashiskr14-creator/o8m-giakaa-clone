@@ -11,8 +11,6 @@ const {
   updateBlog,
   deleteBlog,
 } = require("../controllers/blogController");
-
-// CREATE must be strict
 const createBlogValidators = [
   body("title").isString().trim().notEmpty().withMessage("Title is required"),
   body("content").isString().trim().notEmpty().withMessage("Content is required"),
@@ -30,8 +28,6 @@ const createBlogValidators = [
   }),
   validate,
 ];
-
-// UPDATE allows partial updates (publish toggle sends only isPublished)
 const updateBlogValidators = [
   body("title").optional().isString().trim().notEmpty().withMessage("Title is required"),
   body("content").optional().isString().trim().notEmpty().withMessage("Content is required"),
