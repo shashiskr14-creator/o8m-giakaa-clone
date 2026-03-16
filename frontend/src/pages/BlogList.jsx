@@ -68,19 +68,38 @@ export default function Blog() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
     window.scrollTo(0, 0);
 
-    (async () => {
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const fetchBlogs = async (attempt = 1) => {
       try {
         const res = await getBlogs();
+
+        if (!isMounted) return;
         setBlogs(res.data || []);
+        setError("");
+        setLoading(false);
       } catch (err) {
-        console.error("Blogs fetch error:", err);
-        setError("Failed to load blogs.");
-      } finally {
+        console.error(`Blogs fetch error (attempt ${attempt}):`, err);
+
+        if (attempt < 3) {
+          await wait(4000);
+          return fetchBlogs(attempt + 1);
+        }
+
+        if (!isMounted) return;
+        setError("Server is waking up. Please refresh in a few seconds.");
         setLoading(false);
       }
-    })();
+    };
+
+    fetchBlogs();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -94,11 +113,11 @@ export default function Blog() {
         {error && (
           <div
             style={{
-              background: "#fff5f5",
-              border: "1px solid #f1caca",
+              background: "#fff8e6",
+              border: "1px solid #f3d9a7",
               borderRadius: 16,
               padding: 18,
-              color: "#c53030",
+              color: "#8a6116",
               marginBottom: 18,
             }}
           >

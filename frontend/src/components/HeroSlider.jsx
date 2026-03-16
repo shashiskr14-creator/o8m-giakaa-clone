@@ -15,17 +15,37 @@ export default function HeroSlider() {
   }, [slides]);
 
   useEffect(() => {
-    (async () => {
+    let isMounted = true;
+
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const fetchSlides = async (attempt = 1) => {
       try {
         const res = await getHeroSlides();
+
+        if (!isMounted) return;
         setSlides(res.data || []);
+        setError("");
+        setLoading(false);
       } catch (err) {
-        console.error("Hero fetch error:", err);
-        setError("Failed to load hero section.");
-      } finally {
+        console.error(`Hero fetch error (attempt ${attempt}):`, err);
+
+        if (attempt < 3) {
+          await wait(4000);
+          return fetchSlides(attempt + 1);
+        }
+
+        if (!isMounted) return;
+        setError("Server is waking up. Please refresh in a few seconds.");
         setLoading(false);
       }
-    })();
+    };
+
+    fetchSlides();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -169,10 +189,10 @@ export default function HeroSlider() {
       <div
         style={{
           borderRadius: 18,
-          border: "1px solid #f1caca",
-          background: "#fff5f5",
+          border: "1px solid #f3d9a7",
+          background: "#fff8e6",
           padding: 18,
-          color: "#c53030",
+          color: "#8a6116",
           boxShadow: "0 10px 26px rgba(0,0,0,0.04)",
         }}
       >
