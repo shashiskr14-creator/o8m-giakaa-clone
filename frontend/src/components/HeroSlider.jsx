@@ -5,6 +5,7 @@ export default function HeroSlider() {
   const [slides, setSlides] = useState([]);
   const [idx, setIdx] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const activeSlides = useMemo(() => {
     const list = Array.isArray(slides) ? slides : [];
@@ -18,6 +19,9 @@ export default function HeroSlider() {
       try {
         const res = await getHeroSlides();
         setSlides(res.data || []);
+      } catch (err) {
+        console.error("Hero fetch error:", err);
+        setError("Failed to load hero section.");
       } finally {
         setLoading(false);
       }
@@ -33,7 +37,6 @@ export default function HeroSlider() {
   }, [activeSlides.length]);
 
   useEffect(() => {
-    // reset idx if slides count changed
     if (idx >= activeSlides.length) setIdx(0);
   }, [activeSlides.length, idx]);
 
@@ -53,14 +56,127 @@ export default function HeroSlider() {
     return (
       <div
         style={{
-          borderRadius: 18,
-          border: "1px solid #eee",
           background: "#fff",
-          padding: 18,
-          boxShadow: "0 10px 26px rgba(0,0,0,0.06)",
+          border: "1px solid #eee",
+          borderRadius: 20,
+          boxShadow: "0 16px 40px rgba(0,0,0,0.08)",
+          overflow: "hidden",
         }}
       >
-        Loading hero...
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.2fr 1fr",
+          }}
+          className="hero-grid"
+        >
+          <div
+            style={{
+              minHeight: 340,
+              background: "linear-gradient(90deg, #f0f0f0 25%, #f7f7f7 50%, #f0f0f0 75%)",
+              backgroundSize: "200% 100%",
+              animation: "shimmer 1.4s infinite",
+            }}
+          />
+
+          <div style={{ padding: "22px 18px" }}>
+            <div
+              style={{
+                width: 80,
+                height: 12,
+                borderRadius: 8,
+                background: "#ececec",
+                marginBottom: 14,
+              }}
+            />
+            <div
+              style={{
+                width: "75%",
+                height: 42,
+                borderRadius: 10,
+                background: "#ececec",
+                marginBottom: 12,
+              }}
+            />
+            <div
+              style={{
+                width: "95%",
+                height: 14,
+                borderRadius: 8,
+                background: "#f0f0f0",
+                marginBottom: 10,
+              }}
+            />
+            <div
+              style={{
+                width: "85%",
+                height: 14,
+                borderRadius: 8,
+                background: "#f0f0f0",
+                marginBottom: 10,
+              }}
+            />
+            <div
+              style={{
+                width: "70%",
+                height: 14,
+                borderRadius: 8,
+                background: "#f0f0f0",
+                marginBottom: 20,
+              }}
+            />
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <div
+                style={{
+                  width: 130,
+                  height: 42,
+                  borderRadius: 12,
+                  background: "#e8e8e8",
+                }}
+              />
+              <div
+                style={{
+                  width: 110,
+                  height: 42,
+                  borderRadius: 12,
+                  background: "#f2f2f2",
+                  border: "1px solid #e5e5e5",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <style>
+          {`
+            @keyframes shimmer {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+
+            @media (max-width: 860px) {
+              .hero-grid { grid-template-columns: 1fr !important; }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          borderRadius: 18,
+          border: "1px solid #f1caca",
+          background: "#fff5f5",
+          padding: 18,
+          color: "#c53030",
+          boxShadow: "0 10px 26px rgba(0,0,0,0.04)",
+        }}
+      >
+        {error}
       </div>
     );
   }
@@ -99,7 +215,6 @@ export default function HeroSlider() {
         }}
         className="hero-grid"
       >
-        {/* Media */}
         <div style={{ position: "relative", background: "#f2f2f2", minHeight: 340 }}>
           {current.mediaType === "video" ? (
             <video
@@ -119,7 +234,6 @@ export default function HeroSlider() {
             />
           )}
 
-          {/* Gradient overlay */}
           <div
             style={{
               position: "absolute",
@@ -130,7 +244,6 @@ export default function HeroSlider() {
             }}
           />
 
-          {/* Arrows */}
           {activeSlides.length > 1 && (
             <>
               <button
@@ -151,7 +264,6 @@ export default function HeroSlider() {
           )}
         </div>
 
-        {/* Content */}
         <div style={{ padding: "22px 18px" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span
@@ -229,7 +341,6 @@ export default function HeroSlider() {
             )}
           </div>
 
-          {/* Dots */}
           {activeSlides.length > 1 && (
             <div style={{ display: "flex", gap: 8, marginTop: 16, alignItems: "center" }}>
               {activeSlides.map((_, i) => (
